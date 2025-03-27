@@ -25,6 +25,7 @@ class AppWidget extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routerConfig: Modular.routerConfig,
       scrollBehavior: AppCustomScrollBehavior(),
+
       theme: AppTheme.theme,
     );
   }
@@ -39,6 +40,10 @@ class AppModule extends Module {
 
   @override
   void routes(r) {
-    r.module('/', module: CompaniesModule());
+    r.module(
+      '/',
+      module: CompaniesModule(),
+      transition: TransitionType.rightToLeft,
+    );
   }
 }

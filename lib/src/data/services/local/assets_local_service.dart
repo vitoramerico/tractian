@@ -39,7 +39,6 @@ class AssetsLocalService {
     String query = '',
     String sensorType = '',
     String status = '',
-    bool includeHierarchy = true,
   }) async {
     final db = await _database;
 
@@ -77,13 +76,13 @@ class AssetsLocalService {
       filteredAssets = await _basicQuery(db, whereClause, args);
     }
 
-    if (filteredAssets.isEmpty || !includeHierarchy) {
+    if (filteredAssets.isEmpty) {
       return filteredAssets;
     }
 
     final results = await Future.wait([
-      _getParentsBulk(filteredAssets, db),
-      _getChildrenBulk(filteredAssets, db),
+      _getAllParent(filteredAssets, db),
+      _getAllChild(filteredAssets, db),
     ]);
 
     return {...filteredAssets, ...results[0], ...results[1]}.toList();
@@ -137,43 +136,64 @@ class AssetsLocalService {
     return results.toSet().toList();
   }
 
-  /// Returns the parent assets of a list of assets.
-  Future<Set<AssetModel>> _getParentsBulk(
+  /// Recursively returns all parent locations.
+  Future<Set<AssetModel>> _getAllParent(
     List<AssetModel> assets,
     Database db,
   ) async {
-    final parentIds =
+    Set<AssetModel> allParents = {};
+    Set<String> parentIds =
         assets
             .where((asset) => asset.parentId != null)
             .map((asset) => asset.parentId!)
             .toSet();
 
-    if (parentIds.isEmpty) return {};
+    while (parentIds.isNotEmpty) {
+      final parents = await _databaseHelper.fetchBulk<AssetModel>(
+        db: db,
+        table: 'assets',
+        field: 'id',
+        ids: parentIds,
+        fromMap: AssetModel.fromMap,
+      );
 
-    return _databaseHelper.fetchBulk<AssetModel>(
-      db: db,
-      table: 'assets',
-      field: 'id',
-      ids: parentIds,
-      fromMap: AssetModel.fromMap,
-    );
+      allParents.addAll(parents);
+
+      parentIds = parents
+          .where((p) => p.parentId != null)
+          .map((p) => p.parentId!)
+          .toSet()
+          .difference(allParents.map((p) => p.id).toSet());
+    }
+
+    return allParents;
   }
 
-  /// Returns the child assets of a list of assets.
-  Future<Set<AssetModel>> _getChildrenBulk(
+  /// Recursively returns all child locations.
+  Future<Set<AssetModel>> _getAllChild(
     List<AssetModel> assets,
     Database db,
   ) async {
-    final assetIds = assets.map((asset) => asset.id).toSet();
+    Set<AssetModel> allChildren = {};
+    Set<String> assetIds = assets.map((loc) => loc.id).toSet();
 
-    if (assetIds.isEmpty) return {};
+    while (assetIds.isNotEmpty) {
+      final children = await _databaseHelper.fetchBulk<AssetModel>(
+        db: db,
+        table: 'assets',
+        field: 'parentId',
+        ids: assetIds,
+        fromMap: AssetModel.fromMap,
+      );
 
-    return _databaseHelper.fetchBulk<AssetModel>(
-      db: db,
-      table: 'assets',
-      field: 'parentId',
-      ids: assetIds,
-      fromMap: AssetModel.fromMap,
-    );
+      allChildren.addAll(children);
+
+      assetIds = children
+          .map((c) => c.id)
+          .toSet()
+          .difference(allChildren.map((c) => c.id).toSet());
+    }
+
+    return allChildren;
   }
 }
