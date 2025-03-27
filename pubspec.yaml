@@ -13,6 +13,8 @@ dependencies:
   flutter_modular: ^6.3.4
   flutter_dotenv: ^5.2.1
   dio: ^5.8.0+1
+  sqflite: ^2.4.2
+  path: ^1.9.1
 
 
 dev_dependencies:
