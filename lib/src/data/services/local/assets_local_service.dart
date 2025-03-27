@@ -35,7 +35,7 @@ class AssetsLocalService {
   /// Filters assets based on criteria such as location, sensor type, status, and hierarchy.
   Future<List<AssetModel>> filterAssets({
     required String companyId,
-    List<String>? lstLocationId,
+    List<String> lstLocationId = const [],
     String query = '',
     String sensorType = '',
     String status = '',
@@ -47,7 +47,7 @@ class AssetsLocalService {
 
     if (query.isNotEmpty) {
       conditions.add('name LIKE ?');
-      args.add('%$query%');
+      args.add('$query%');
     }
 
     if (sensorType.isNotEmpty) {
@@ -63,14 +63,12 @@ class AssetsLocalService {
     final whereClause = conditions.join(' AND ');
     List<AssetModel> filteredAssets = [];
 
-    if (sensorType.isEmpty &&
-        status.isEmpty &&
-        lstLocationId?.isNotEmpty == true) {
+    if (sensorType.isEmpty && status.isEmpty && lstLocationId.isNotEmpty) {
       filteredAssets = await _queryWithLocationBatches(
         db,
         whereClause,
         args,
-        lstLocationId!,
+        lstLocationId,
       );
     } else {
       filteredAssets = await _basicQuery(db, whereClause, args);

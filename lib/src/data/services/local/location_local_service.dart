@@ -43,15 +43,22 @@ class LocationLocalService {
     String query = '',
   }) async {
     final db = await _database;
-    final whereClause =
-        query.isNotEmpty ? 'companyId = ? AND name LIKE ?' : 'companyId = ?';
-    final whereArgs = query.isNotEmpty ? [companyId, '%$query%'] : [companyId];
+
+    final conditions = <String>['companyId = ?'];
+    final args = <dynamic>[companyId];
+
+    if (query.isNotEmpty) {
+      conditions.add('AND name LIKE ?');
+      args.add('$query%');
+    }
+
+    final whereClause = conditions.join(' ');
 
     final filteredLocations = await _databaseHelper.queryList(
       db,
       'locations',
       whereClause,
-      whereArgs,
+      args,
       (map) => LocationModel.fromMap(map),
     );
 
@@ -60,15 +67,15 @@ class LocationLocalService {
     }
 
     final results = await Future.wait([
-      _getAllParentLocations(filteredLocations, db),
-      _getAllChildLocations(filteredLocations, db),
+      _getAllParent(filteredLocations, db),
+      _getAllChild(filteredLocations, db),
     ]);
 
     return {...filteredLocations, ...results[0], ...results[1]}.toList();
   }
 
   /// Recursively returns all parent locations.
-  Future<Set<LocationModel>> _getAllParentLocations(
+  Future<Set<LocationModel>> _getAllParent(
     List<LocationModel> locations,
     Database db,
   ) async {
@@ -101,7 +108,7 @@ class LocationLocalService {
   }
 
   /// Recursively returns all child locations.
-  Future<Set<LocationModel>> _getAllChildLocations(
+  Future<Set<LocationModel>> _getAllChild(
     List<LocationModel> locations,
     Database db,
   ) async {
