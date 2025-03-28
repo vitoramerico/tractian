@@ -36,7 +36,9 @@ jobs:
         run: flutter analyze
 
       - name: Run tests with coverage
-        run: flutter test --machine > ./coverage/test-results.json
+        run: |
+          mkdir coverage
+          flutter test --machine > ./coverage/test-results.json
 
       - name: Upload coverage report
         if: success()
