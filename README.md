@@ -81,7 +81,7 @@ Ensure that the Tractian API (or an equivalent mock API) is accessible for the a
 - **Multilingual Support**: Implement translations for different languages, making the application globally accessible.  
 
 #### Video:
-[Demonstration Video](https://raw.githubusercontent.com/vitoramerico/tractian/main/video.mp4)
+[Demonstration Video](https://github.com/vitoramerico/tractian/blob/main/video.mp4?raw=true)
 
 ## Contact
 
