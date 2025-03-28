@@ -36,14 +36,22 @@ jobs:
         run: flutter analyze
 
       - name: Run tests with coverage
-        run: flutter test --coverage
+        run: flutter test --machine > ./coverage/test-results.json
 
       - name: Upload coverage report
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage/lcov.info
+          path: coverage
+          retention-days: 7
+
+      - name: Show report tests
+        uses: dorny/test-reporter@v2
+        with:
+          name: Tests
+          path: ./coverage/test-results.json
+          reporter: flutter-json
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
