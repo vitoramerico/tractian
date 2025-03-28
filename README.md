@@ -16,6 +16,7 @@ This project was developed as part of Tractian's technical evaluation process, h
 - **Adaptive Interface**: Responsive layout ensuring a smooth experience across different devices and screen sizes.  
 - **Enhanced Offline Support**: Stores data in a local database to optimize queries, reducing the need for multiple API requests.
 
+
 ## Technologies Used  
 
 - **Flutter**: Main framework used for application development.  
@@ -80,7 +81,23 @@ Ensure that the Tractian API (or an equivalent mock API) is accessible for the a
 - **Hierarchical Visualization Enhancement**: Improve the presentation of the asset and location tree to facilitate navigation and usability.  
 - **Multilingual Support**: Implement translations for different languages, making the application globally accessible.  
 
-#### Video:
+## Continuous Integration
+
+This project uses GitHub Actions for continuous integration. The CI workflow, defined in [ci.yml](.github/workflows/ci.yml), performs the following steps:
+
+- Checks out the repository.
+- Sets up Flutter on the `stable` channel with caching enabled.
+- Displays the Flutter version.
+- Cleans the project and gets Flutter dependencies.
+- Checks code formatting using `dart format`.
+- Runs static analysis with `flutter analyze`.
+- Executes tests with coverage using `flutter test`.
+- Uploads the coverage report as an artifact.
+- Displays test results with a dedicated reporter.
+
+You can trigger the workflow on pushes to the `main` branch or manually via the GitHub Actions dashboard.
+
+## Video:
 [Demonstration Video](https://github.com/vitoramerico/tractian/blob/main/video.mp4?raw=true)
 
 ## Contact
