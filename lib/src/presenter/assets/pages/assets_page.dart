@@ -22,6 +22,8 @@ class _AssetsPageState extends State<AssetsPage> {
   void initState() {
     super.initState();
 
+    _viewModel.getAssetsByCompany.addListener(_listener);
+    _viewModel.getLocationsByCompany.addListener(_listener);
     _viewModel.getFilteredAssetsAndLocation.addListener(_listener);
 
     _viewModel.init(widget.companyId);
