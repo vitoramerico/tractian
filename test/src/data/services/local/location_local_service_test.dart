@@ -3,147 +3,156 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tractian/src/core/database/database_helper.dart';
-import 'package:tractian/src/data/models/config_model.dart';
-import 'package:tractian/src/data/services/local/config_local_service.dart';
+import 'package:tractian/src/data/models/location_model.dart';
+import 'package:tractian/src/data/services/local/location_local_service.dart';
 
 import 'location_local_service_test.mocks.dart';
 
 @GenerateMocks([DatabaseHelper, Database])
 void main() {
-  late ConfigLocalService configLocalService;
+  late LocationLocalService service;
   late MockDatabaseHelper mockDatabaseHelper;
   late MockDatabase mockDatabase;
+
+  const tCompanyId = '123';
+
+  final tLocation = [
+    LocationModel(
+      id: '1',
+      name: 'Location 1',
+      parentId: null,
+      companyId: tCompanyId,
+    ),
+    LocationModel(
+      id: '2',
+      name: 'Location 2',
+      parentId: '1',
+      companyId: tCompanyId,
+    ),
+  ];
 
   setUp(() {
     mockDatabaseHelper = MockDatabaseHelper();
     mockDatabase = MockDatabase();
-    configLocalService = ConfigLocalService(mockDatabaseHelper);
+    service = LocationLocalService(mockDatabaseHelper);
 
     when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
   });
 
-  group('ConfigLocalService Tests', () {
-    group('updateConfig', () {
-      test('should update config in database', () async {
-        // Arrange
-        final config = ConfigModel(
-          lastSyncCompanies: 1678886400000,
-          lastSyncLocations: 1678800000000,
-          lastSyncAssets: 1678713600000,
-        );
-        when(
-          mockDatabase.insert(
-            'config',
-            config.toMap(),
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          ),
-        ).thenAnswer((_) async => 1);
+  group('saveLocations', () {
+    test('should call saveBatch with correct parameters', () async {
+      // Stub saveBatch to return a Future.
+      when(
+        mockDatabaseHelper.saveBatch(any, any, any),
+      ).thenAnswer((_) async {});
 
-        // Act
-        await configLocalService.updateConfig(config);
+      await service.saveLocations(tCompanyId, tLocation);
 
-        // Assert
-        verify(
-          mockDatabase.insert(
-            'config',
-            config.toMap(),
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          ),
-        ).called(1);
-      });
+      verify(
+        mockDatabaseHelper.saveBatch(
+          mockDatabase,
+          'locations',
+          tLocation.map((l) => l.toMap()).toList(),
+        ),
+      ).called(1);
+    });
+  });
+
+  group('getLocationsByCompany', () {
+    test('should return locations for a company', () async {
+      // arrange
+      when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
+      when(
+        mockDatabaseHelper.getByField(
+          mockDatabase,
+          'locations',
+          'companyId',
+          tCompanyId,
+          any,
+        ),
+      ).thenAnswer((_) async => tLocation);
+      // act
+      await service.getLocationsByCompany(tCompanyId);
+      // assert
+      verify(
+        mockDatabaseHelper.getByField(
+          mockDatabase,
+          'locations',
+          'companyId',
+          tCompanyId,
+          any,
+        ),
+      );
+    });
+  });
+
+  group('filterLocations', () {
+    test('should return empty list if query returns no locations', () async {
+      // arrange
+      when(
+        mockDatabaseHelper.queryList<LocationModel>(
+          mockDatabase,
+          'locations',
+          any,
+          any,
+          any,
+        ),
+      ).thenAnswer((_) async => []);
+
+      // act
+      final results = await service.filterLocations(
+        companyId: tCompanyId,
+        query: 'Test',
+      );
+
+      // assert
+      expect(results, isEmpty);
     });
 
-    group('needSyncCompanies', () {
-      test('should return true when lastSync is null', () async {
-        // Arrange
+    test(
+      'should return filtered locations with union of parents and children',
+      () async {
+        // arrange
         when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1},
-          ],
-        );
-
-        // Act
-        final result = await configLocalService.needSyncCompanies();
-
-        // Assert
-        expect(result, true);
-      });
-
-      test('should return true when sync interval exceeded', () async {
-        // Arrange
-        final pastTime =
-            DateTime.now()
-                .subtract(const Duration(minutes: 31))
-                .millisecondsSinceEpoch;
-        when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1, 'lastSyncCompanies': pastTime},
-          ],
-        );
-
-        // Act
-        final result = await configLocalService.needSyncCompanies();
-
-        // Assert
-        expect(result, true);
-      });
-
-      test('should return false when within sync interval', () async {
-        // Arrange
-        final recentTime =
-            DateTime.now()
-                .subtract(const Duration(minutes: 5))
-                .millisecondsSinceEpoch;
-        when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1, 'lastSyncCompanies': recentTime},
-          ],
-        );
-
-        // Act
-        final result = await configLocalService.needSyncCompanies();
-
-        // Assert
-        expect(result, false);
-      });
-    });
-
-    group('updateLastSyncCompanies', () {
-      test('should update last sync companies timestamp', () async {
-        // Arrange
-        when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1},
-          ],
-        );
-        when(
-          mockDatabase.insert(
-            'config',
+          mockDatabaseHelper.queryList<LocationModel>(
+            mockDatabase,
+            'locations',
             any,
-            conflictAlgorithm: ConflictAlgorithm.replace,
+            any,
+            any,
           ),
-        ).thenAnswer((_) async => 1);
+        ).thenAnswer((_) async => tLocation);
 
-        // Act
-        await configLocalService.updateLastSyncCompanies();
-
-        // Assert
-        verify(
-          mockDatabase.insert(
-            'config',
-            argThat(isA<Map<String, dynamic>>()),
-            conflictAlgorithm: ConflictAlgorithm.replace,
+        when(
+          mockDatabaseHelper.fetchBulk<LocationModel>(
+            db: mockDatabase,
+            table: 'locations',
+            field: 'id',
+            ids: anyNamed('ids'),
+            fromMap: anyNamed('fromMap'),
           ),
-        ).called(1);
-      });
-    });
+        ).thenAnswer((_) async => {});
+
+        when(
+          mockDatabaseHelper.fetchBulk<LocationModel>(
+            db: mockDatabase,
+            table: 'locations',
+            field: 'parentId',
+            ids: anyNamed('ids'),
+            fromMap: anyNamed('fromMap'),
+          ),
+        ).thenAnswer((_) async => {});
+
+        // act
+        final results = await service.filterLocations(
+          companyId: tCompanyId,
+          query: 'Loc',
+        );
+
+        // assert
+        expect(results.length, 2);
+        expect(results, equals(tLocation));
+      },
+    );
   });
 }

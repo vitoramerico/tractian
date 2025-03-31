@@ -32,6 +32,14 @@ class MockIHttpConnect extends _i1.Mock implements _i2.IHttpConnect {
   }
 
   @override
+  _i3.Future<bool> checkConnectivity() =>
+      (super.noSuchMethod(
+            Invocation.method(#checkConnectivity, []),
+            returnValue: _i3.Future<bool>.value(false),
+          )
+          as _i3.Future<bool>);
+
+  @override
   _i3.Future<dynamic> get(
     String? path, {
     Object? data,

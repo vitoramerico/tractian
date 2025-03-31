@@ -3,23 +3,25 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:tractian/src/data/models/asset_model.dart' as _i6;
-import 'package:tractian/src/data/models/company_model.dart' as _i4;
-import 'package:tractian/src/data/models/config_model.dart' as _i8;
-import 'package:tractian/src/data/models/location_model.dart' as _i5;
+import 'package:tractian/src/core/http_connect/i_http_connect_interface.dart'
+    as _i12;
+import 'package:tractian/src/data/models/asset_model.dart' as _i7;
+import 'package:tractian/src/data/models/company_model.dart' as _i5;
+import 'package:tractian/src/data/models/config_model.dart' as _i2;
+import 'package:tractian/src/data/models/location_model.dart' as _i6;
 import 'package:tractian/src/data/services/local/assets_local_service.dart'
     as _i11;
 import 'package:tractian/src/data/services/local/company_local_service.dart'
     as _i9;
 import 'package:tractian/src/data/services/local/config_local_service.dart'
-    as _i7;
+    as _i8;
 import 'package:tractian/src/data/services/local/location_local_service.dart'
     as _i10;
 import 'package:tractian/src/data/services/remote/tractian_api_service.dart'
-    as _i2;
+    as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -35,116 +37,80 @@ import 'package:tractian/src/data/services/remote/tractian_api_service.dart'
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeConfigModel_0 extends _i1.SmartFake implements _i2.ConfigModel {
+  _FakeConfigModel_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [TractianApiService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTractianApiService extends _i1.Mock
-    implements _i2.TractianApiService {
+    implements _i3.TractianApiService {
   MockTractianApiService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<List<_i4.CompanyModel>> getCompanies() =>
+  _i4.Future<List<_i5.CompanyModel>> getCompanies() =>
       (super.noSuchMethod(
             Invocation.method(#getCompanies, []),
-            returnValue: _i3.Future<List<_i4.CompanyModel>>.value(
-              <_i4.CompanyModel>[],
+            returnValue: _i4.Future<List<_i5.CompanyModel>>.value(
+              <_i5.CompanyModel>[],
             ),
           )
-          as _i3.Future<List<_i4.CompanyModel>>);
+          as _i4.Future<List<_i5.CompanyModel>>);
 
   @override
-  _i3.Future<List<_i5.LocationModel>> getLocationsByCompany(
+  _i4.Future<List<_i6.LocationModel>> getLocationsByCompany(
     String? companyId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getLocationsByCompany, [companyId]),
-            returnValue: _i3.Future<List<_i5.LocationModel>>.value(
-              <_i5.LocationModel>[],
+            returnValue: _i4.Future<List<_i6.LocationModel>>.value(
+              <_i6.LocationModel>[],
             ),
           )
-          as _i3.Future<List<_i5.LocationModel>>);
+          as _i4.Future<List<_i6.LocationModel>>);
 
   @override
-  _i3.Future<List<_i6.AssetModel>> getAssetsByCompany(String? companyId) =>
+  _i4.Future<List<_i7.AssetModel>> getAssetsByCompany(String? companyId) =>
       (super.noSuchMethod(
             Invocation.method(#getAssetsByCompany, [companyId]),
-            returnValue: _i3.Future<List<_i6.AssetModel>>.value(
-              <_i6.AssetModel>[],
+            returnValue: _i4.Future<List<_i7.AssetModel>>.value(
+              <_i7.AssetModel>[],
             ),
           )
-          as _i3.Future<List<_i6.AssetModel>>);
+          as _i4.Future<List<_i7.AssetModel>>);
 }
 
 /// A class which mocks [ConfigLocalService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockConfigLocalService extends _i1.Mock
-    implements _i7.ConfigLocalService {
+    implements _i8.ConfigLocalService {
   MockConfigLocalService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<void> updateConfig(_i8.ConfigModel? config) =>
+  _i4.Future<void> updateConfig(_i2.ConfigModel? config) =>
       (super.noSuchMethod(
             Invocation.method(#updateConfig, [config]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<bool> needSyncCompanies() =>
+  _i4.Future<_i2.ConfigModel> getConfig() =>
       (super.noSuchMethod(
-            Invocation.method(#needSyncCompanies, []),
-            returnValue: _i3.Future<bool>.value(false),
+            Invocation.method(#getConfig, []),
+            returnValue: _i4.Future<_i2.ConfigModel>.value(
+              _FakeConfigModel_0(this, Invocation.method(#getConfig, [])),
+            ),
           )
-          as _i3.Future<bool>);
-
-  @override
-  _i3.Future<void> updateLastSyncCompanies() =>
-      (super.noSuchMethod(
-            Invocation.method(#updateLastSyncCompanies, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
-
-  @override
-  _i3.Future<bool> needSyncLocations() =>
-      (super.noSuchMethod(
-            Invocation.method(#needSyncLocations, []),
-            returnValue: _i3.Future<bool>.value(false),
-          )
-          as _i3.Future<bool>);
-
-  @override
-  _i3.Future<void> updateLastSyncLocations() =>
-      (super.noSuchMethod(
-            Invocation.method(#updateLastSyncLocations, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
-
-  @override
-  _i3.Future<bool> needSyncAssets() =>
-      (super.noSuchMethod(
-            Invocation.method(#needSyncAssets, []),
-            returnValue: _i3.Future<bool>.value(false),
-          )
-          as _i3.Future<bool>);
-
-  @override
-  _i3.Future<void> updateLastSyncAssets() =>
-      (super.noSuchMethod(
-            Invocation.method(#updateLastSyncAssets, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+          as _i4.Future<_i2.ConfigModel>);
 }
 
 /// A class which mocks [CompanyLocalService].
@@ -157,23 +123,23 @@ class MockCompanyLocalService extends _i1.Mock
   }
 
   @override
-  _i3.Future<void> saveCompanies(List<_i4.CompanyModel>? companies) =>
+  _i4.Future<void> saveCompanies(List<_i5.CompanyModel>? companies) =>
       (super.noSuchMethod(
             Invocation.method(#saveCompanies, [companies]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<List<_i4.CompanyModel>> getCompanies() =>
+  _i4.Future<List<_i5.CompanyModel>> getCompanies() =>
       (super.noSuchMethod(
             Invocation.method(#getCompanies, []),
-            returnValue: _i3.Future<List<_i4.CompanyModel>>.value(
-              <_i4.CompanyModel>[],
+            returnValue: _i4.Future<List<_i5.CompanyModel>>.value(
+              <_i5.CompanyModel>[],
             ),
           )
-          as _i3.Future<List<_i4.CompanyModel>>);
+          as _i4.Future<List<_i5.CompanyModel>>);
 }
 
 /// A class which mocks [LocationLocalService].
@@ -186,31 +152,31 @@ class MockLocationLocalService extends _i1.Mock
   }
 
   @override
-  _i3.Future<void> saveLocations(
+  _i4.Future<void> saveLocations(
     String? companyId,
-    List<_i5.LocationModel>? locations,
+    List<_i6.LocationModel>? locations,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#saveLocations, [companyId, locations]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<List<_i5.LocationModel>> getLocationsByCompany(
+  _i4.Future<List<_i6.LocationModel>> getLocationsByCompany(
     String? companyId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getLocationsByCompany, [companyId]),
-            returnValue: _i3.Future<List<_i5.LocationModel>>.value(
-              <_i5.LocationModel>[],
+            returnValue: _i4.Future<List<_i6.LocationModel>>.value(
+              <_i6.LocationModel>[],
             ),
           )
-          as _i3.Future<List<_i5.LocationModel>>);
+          as _i4.Future<List<_i6.LocationModel>>);
 
   @override
-  _i3.Future<List<_i5.LocationModel>> filterLocations({
+  _i4.Future<List<_i6.LocationModel>> filterLocations({
     required String? companyId,
     String? query = '',
   }) =>
@@ -219,11 +185,11 @@ class MockLocationLocalService extends _i1.Mock
               #companyId: companyId,
               #query: query,
             }),
-            returnValue: _i3.Future<List<_i5.LocationModel>>.value(
-              <_i5.LocationModel>[],
+            returnValue: _i4.Future<List<_i6.LocationModel>>.value(
+              <_i6.LocationModel>[],
             ),
           )
-          as _i3.Future<List<_i5.LocationModel>>);
+          as _i4.Future<List<_i6.LocationModel>>);
 }
 
 /// A class which mocks [AssetsLocalService].
@@ -236,35 +202,34 @@ class MockAssetsLocalService extends _i1.Mock
   }
 
   @override
-  _i3.Future<void> saveAssets(
+  _i4.Future<void> saveAssets(
     String? companyId,
-    List<_i6.AssetModel>? assets,
+    List<_i7.AssetModel>? assets,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#saveAssets, [companyId, assets]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
           )
-          as _i3.Future<void>);
+          as _i4.Future<void>);
 
   @override
-  _i3.Future<List<_i6.AssetModel>> getAssetsByCompany(String? companyId) =>
+  _i4.Future<List<_i7.AssetModel>> getAssetsByCompany(String? companyId) =>
       (super.noSuchMethod(
             Invocation.method(#getAssetsByCompany, [companyId]),
-            returnValue: _i3.Future<List<_i6.AssetModel>>.value(
-              <_i6.AssetModel>[],
+            returnValue: _i4.Future<List<_i7.AssetModel>>.value(
+              <_i7.AssetModel>[],
             ),
           )
-          as _i3.Future<List<_i6.AssetModel>>);
+          as _i4.Future<List<_i7.AssetModel>>);
 
   @override
-  _i3.Future<List<_i6.AssetModel>> filterAssets({
+  _i4.Future<List<_i7.AssetModel>> filterAssets({
     required String? companyId,
-    List<String>? lstLocationId,
+    List<String>? lstLocationId = const [],
     String? query = '',
     String? sensorType = '',
     String? status = '',
-    bool? includeHierarchy = true,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#filterAssets, [], {
@@ -273,11 +238,119 @@ class MockAssetsLocalService extends _i1.Mock
               #query: query,
               #sensorType: sensorType,
               #status: status,
-              #includeHierarchy: includeHierarchy,
             }),
-            returnValue: _i3.Future<List<_i6.AssetModel>>.value(
-              <_i6.AssetModel>[],
+            returnValue: _i4.Future<List<_i7.AssetModel>>.value(
+              <_i7.AssetModel>[],
             ),
           )
-          as _i3.Future<List<_i6.AssetModel>>);
+          as _i4.Future<List<_i7.AssetModel>>);
+}
+
+/// A class which mocks [IHttpConnect].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockIHttpConnect extends _i1.Mock implements _i12.IHttpConnect {
+  MockIHttpConnect() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<bool> checkConnectivity() =>
+      (super.noSuchMethod(
+            Invocation.method(#checkConnectivity, []),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
+
+  @override
+  _i4.Future<dynamic> get(
+    String? path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #get,
+              [path],
+              {
+                #data: data,
+                #headers: headers,
+                #queryParameters: queryParameters,
+              },
+            ),
+            returnValue: _i4.Future<dynamic>.value(),
+          )
+          as _i4.Future<dynamic>);
+
+  @override
+  _i4.Future<dynamic> post(
+    String? path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #post,
+              [path],
+              {
+                #data: data,
+                #headers: headers,
+                #queryParameters: queryParameters,
+              },
+            ),
+            returnValue: _i4.Future<dynamic>.value(),
+          )
+          as _i4.Future<dynamic>);
+
+  @override
+  _i4.Future<dynamic> put(
+    String? path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #put,
+              [path],
+              {
+                #data: data,
+                #headers: headers,
+                #queryParameters: queryParameters,
+              },
+            ),
+            returnValue: _i4.Future<dynamic>.value(),
+          )
+          as _i4.Future<dynamic>);
+
+  @override
+  _i4.Future<dynamic> delete(
+    String? path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #delete,
+              [path],
+              {
+                #data: data,
+                #headers: headers,
+                #queryParameters: queryParameters,
+              },
+            ),
+            returnValue: _i4.Future<dynamic>.value(),
+          )
+          as _i4.Future<dynamic>);
+
+  @override
+  _i4.Future<dynamic> fetch(dynamic requestOptions) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetch, [requestOptions]),
+            returnValue: _i4.Future<dynamic>.value(),
+          )
+          as _i4.Future<dynamic>);
 }

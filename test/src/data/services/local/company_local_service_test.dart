@@ -15,16 +15,16 @@ void main() {
   late MockDatabaseHelper mockDatabaseHelper;
   late MockDatabase mockDatabase;
 
+  final tCompanies = [
+    const CompanyModel(id: '1', name: 'Company 1'),
+    const CompanyModel(id: '2', name: 'Company 2'),
+  ];
+
   setUp(() {
     mockDatabaseHelper = MockDatabaseHelper();
     service = CompanyLocalService(mockDatabaseHelper);
     mockDatabase = MockDatabase();
   });
-
-  final tCompanies = [
-    const CompanyModel(id: '1', name: 'Company 1'),
-    const CompanyModel(id: '2', name: 'Company 2'),
-  ];
 
   group('saveCompanies', () {
     test(

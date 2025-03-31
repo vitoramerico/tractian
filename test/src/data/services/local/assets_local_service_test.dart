@@ -14,12 +14,6 @@ void main() {
   late MockDatabaseHelper mockDatabaseHelper;
   late MockDatabase mockDatabase;
 
-  setUp(() {
-    mockDatabaseHelper = MockDatabaseHelper();
-    service = AssetsLocalService(mockDatabaseHelper);
-    mockDatabase = MockDatabase();
-  });
-
   const tCompanyId = '123';
 
   final tAssets = [
@@ -47,58 +41,58 @@ void main() {
     ),
   ];
 
+  setUp(() {
+    mockDatabaseHelper = MockDatabaseHelper();
+    service = AssetsLocalService(mockDatabaseHelper);
+    mockDatabase = MockDatabase();
+  });
+
   group('saveAssets', () {
-    test(
-      'should call databaseHelper.saveBatch with correct arguments',
-      () async {
-        // arrange
-        when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
-        when(
-          mockDatabaseHelper.saveBatch(mockDatabase, 'assets', any),
-        ).thenAnswer((_) async {});
-        // act
-        await service.saveAssets(tCompanyId, tAssets);
-        // assert
-        verify(
-          mockDatabaseHelper.saveBatch(
-            mockDatabase,
-            'assets',
-            tAssets.map((a) => a.toMap()).toList(),
-          ),
-        );
-      },
-    );
+    test('should call saveBatch with correct parameters', () async {
+      // arrange
+      when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
+      when(
+        mockDatabaseHelper.saveBatch(mockDatabase, 'assets', any),
+      ).thenAnswer((_) async {});
+      // act
+      await service.saveAssets(tCompanyId, tAssets);
+      // assert
+      verify(
+        mockDatabaseHelper.saveBatch(
+          mockDatabase,
+          'assets',
+          tAssets.map((a) => a.toMap()).toList(),
+        ),
+      );
+    });
   });
 
   group('getAssetsByCompany', () {
-    test(
-      'should call databaseHelper.getByField with correct arguments',
-      () async {
-        // arrange
-        when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
-        when(
-          mockDatabaseHelper.getByField(
-            mockDatabase,
-            'assets',
-            'companyId',
-            tCompanyId,
-            any,
-          ),
-        ).thenAnswer((_) async => tAssets);
-        // act
-        await service.getAssetsByCompany(tCompanyId);
-        // assert
-        verify(
-          mockDatabaseHelper.getByField(
-            mockDatabase,
-            'assets',
-            'companyId',
-            tCompanyId,
-            any,
-          ),
-        );
-      },
-    );
+    test('should return assets for a company', () async {
+      // arrange
+      when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
+      when(
+        mockDatabaseHelper.getByField(
+          mockDatabase,
+          'assets',
+          'companyId',
+          tCompanyId,
+          any,
+        ),
+      ).thenAnswer((_) async => tAssets);
+      // act
+      await service.getAssetsByCompany(tCompanyId);
+      // assert
+      verify(
+        mockDatabaseHelper.getByField(
+          mockDatabase,
+          'assets',
+          'companyId',
+          tCompanyId,
+          any,
+        ),
+      );
+    });
   });
 
   group('filterAssets', () {

@@ -19,132 +19,75 @@ void main() {
     mockDatabase = MockDatabase();
     service = ConfigLocalService(mockDatabaseHelper);
 
-    // Configura o mock para retornar o mockDatabase
     when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
   });
 
-  group('ConfigLocalService Tests', () {
-    group('updateConfig', () {
-      test('should update config in database', () async {
-        // Arrange
-        final config = ConfigModel(
-          lastSyncCompanies: 1678886400000,
-          lastSyncLocations: 1678800000000,
-          lastSyncAssets: 1678713600000,
-        );
-        when(
-          mockDatabase.insert(
-            'config',
-            config.toMap(),
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          ),
-        ).thenAnswer((_) async => 1);
+  group('updateConfig', () {
+    test('should update config in database', () async {
+      // Arrange
+      final config = ConfigModel(
+        lastSyncCompanies: 1678886400000,
+        lastSyncLocations: 1678800000000,
+        lastSyncAssets: 1678713600000,
+      );
+      when(
+        mockDatabase.insert(
+          'config',
+          config.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        ),
+      ).thenAnswer((_) async => 1);
 
-        // Act
-        await service.updateConfig(config);
+      // Act
+      await service.updateConfig(config);
 
-        // Assert
-        verify(
-          mockDatabase.insert(
-            'config',
-            config.toMap(),
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          ),
-        ).called(1);
-      });
+      // Assert
+      verify(
+        mockDatabase.insert(
+          'config',
+          config.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        ),
+      ).called(1);
+    });
+  });
+
+  group('getConfig', () {
+    test('should return default config when no config found', () async {
+      // Arrange
+      when(
+        mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
+      ).thenAnswer((_) async => []);
+
+      // Act
+      final config = await service.getConfig();
+
+      // Assert
+      expect(config.id, equals(1));
+      expect(config.lastSyncCompanies, equals(null));
+      expect(config.lastSyncLocations, equals(null));
+      expect(config.lastSyncAssets, equals(null));
     });
 
-    group('needSyncCompanies', () {
-      test('should return true when lastSync is null', () async {
-        // Arrange
-        when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1},
-          ],
-        );
+    test('should return ConfigModel from database query result', () async {
+      // Arrange
+      final configMap = {
+        'id': 1,
+        'lastSyncCompanies': 1678886400000,
+        'lastSyncLocations': 1678800000000,
+        'lastSyncAssets': 1678713600000,
+      };
+      when(
+        mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
+      ).thenAnswer((_) async => [configMap]);
 
-        // Act
-        final result = await service.needSyncCompanies();
+      // Act
+      final config = await service.getConfig();
 
-        // Assert
-        expect(result, true);
-      });
-
-      test('should return true when sync interval exceeded', () async {
-        // Arrange
-        final pastTime =
-            DateTime.now()
-                .subtract(const Duration(minutes: 31))
-                .millisecondsSinceEpoch;
-        when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1, 'lastSyncCompanies': pastTime},
-          ],
-        );
-
-        // Act
-        final result = await service.needSyncCompanies();
-
-        // Assert
-        expect(result, true);
-      });
-
-      test('should return false when within sync interval', () async {
-        // Arrange
-        final recentTime =
-            DateTime.now()
-                .subtract(const Duration(minutes: 5))
-                .millisecondsSinceEpoch;
-        when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1, 'lastSyncCompanies': recentTime},
-          ],
-        );
-
-        // Act
-        final result = await service.needSyncCompanies();
-
-        // Assert
-        expect(result, false);
-      });
-    });
-
-    group('updateLastSyncCompanies', () {
-      test('should update last sync companies timestamp', () async {
-        // Arrange
-        when(
-          mockDatabase.query('config', where: 'id = ?', whereArgs: [1]),
-        ).thenAnswer(
-          (_) async => [
-            {'id': 1},
-          ],
-        );
-        when(
-          mockDatabase.insert(
-            'config',
-            any,
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          ),
-        ).thenAnswer((_) async => 1);
-
-        // Act
-        await service.updateLastSyncCompanies();
-
-        // Assert
-        verify(
-          mockDatabase.insert(
-            'config',
-            argThat(isA<Map<String, dynamic>>()),
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          ),
-        ).called(1);
-      });
+      // Assert
+      expect(config.lastSyncCompanies, equals(1678886400000));
+      expect(config.lastSyncLocations, equals(1678800000000));
+      expect(config.lastSyncAssets, equals(1678713600000));
     });
   });
 }
