@@ -1,4 +1,6 @@
 abstract interface class IHttpConnect {
+  Future<bool> checkConnectivity();
+
   Future<dynamic> get(
     String path, {
     Object? data,

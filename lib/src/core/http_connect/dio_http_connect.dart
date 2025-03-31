@@ -29,6 +29,16 @@ class DioHttpConnect implements IHttpConnect {
   }
 
   @override
+  Future<bool> checkConnectivity() async {
+    try {
+      final response = await _dio.get('https://www.google.com');
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
   Future<Response<dynamic>> get(
     String path, {
     Object? data,
