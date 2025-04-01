@@ -79,7 +79,8 @@ Ensure that the Tractian API (or an equivalent mock API) is accessible for the a
 - **Filter Optimization**: Implement filtering on the back-end to reduce the amount of returned data, improving performance.  
 - **Animations and UX**: Add transitions and visual effects to make the user experience smoother and more interactive.  
 - **Hierarchical Visualization Enhancement**: Improve the presentation of the asset and location tree to facilitate navigation and usability.  
-- **Multilingual Support**: Implement translations for different languages, making the application globally accessible.  
+- **Multilingual Support**: Implement translations for different languages, making the application globally accessible.
+- **Favorite Component**: Allow a component to be marked as a favorite for easier access. Additionally, add a filter to search for favorite components by company.
 
 ## Continuous Integration
 
