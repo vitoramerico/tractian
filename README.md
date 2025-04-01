@@ -98,7 +98,8 @@ This project uses GitHub Actions for continuous integration. The CI workflow, de
 You can trigger the workflow on pushes to the `main` branch or manually via the GitHub Actions dashboard.
 
 ## Video:
-[Demonstration Video](https://github.com/vitoramerico/tractian/blob/main/video.mp4?raw=true)
+- [Galaxy J5 (SM-J510GN)](https://github.com/vitoramerico/tractian/blob/main/video-galaxy-j5.mp4?raw=true)
+- [iPhone SE](https://github.com/vitoramerico/tractian/blob/main/video-iphone-se.mp4?raw=true)
 
 ## Contact
 
